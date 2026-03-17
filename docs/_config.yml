@@ -2,4 +2,5 @@ destination: _site
 remote_theme: pages-themes/cayman@v0.2.0
 plugins:
   - jekyll-remote-theme
-title: Predicting Major Power Outages
+title: When the Lights Go Out
+description: Predicting Major US Power Outage Severity
