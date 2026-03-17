@@ -63,10 +63,32 @@ Here are the first few rows of the cleaned dataset:
 
 ### Univariate Analysis
 
-The distribution of outage duration is heavily right-skewed -- the vast majority of outages resolve within a few thousand minutes, but a small number of extreme events stretch well beyond 20,000 minutes. This skew motivates framing the prediction problem as a binary classification task (severe vs. not severe) rather than trying to predict exact duration.
+The distribution of outage duration is heavily right-skewed, with the vast majority of outages resolving within 5,000 minutes and a small number of extreme events stretching past 15,000 minutes. This skew motivates framing the prediction problem as binary classification (severe vs. not severe) rather than predicting exact duration.
 
 <iframe
   src="figures/univariate/outage_duration_dist.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+### Bivariate Analysis
+
+Fuel supply emergencies and severe weather stand out as the causes most associated with longer outage durations, while intentional attacks tend to resolve much more quickly. This pattern suggests that cause category carries meaningful signal for predicting whether an outage will become severe.
+
+<iframe
+  src="figures/bivariate/duration_by_cause.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
+
+### Interesting Aggregates
+
+This table groups outages by both cause category and climate condition to show how average duration varies across combinations of the two. Fuel supply emergencies stand out dramatically, particularly during warm and cold climate periods, suggesting that extreme climate conditions compound the difficulty of resolving certain types of outages. Severe weather outages show a more modest but consistent increase in duration across all climate categories.
+
+<iframe
+  src="figures/aggregation/duration_by_cause_climate.html"
   width="800"
   height="500"
   frameborder="0"
