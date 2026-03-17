@@ -93,3 +93,28 @@ This table groups outages by both cause category and climate condition to show h
   height="500"
   frameborder="0"
 ></iframe>
+
+---
+
+## Assessment of Missingness
+
+### NMAR Analysis
+
+`CUSTOMERS.AFFECTED` is NMAR. Utilities may not report the number of affected customers when an outage is small or localized, meaning the missingness is related to the value itself. Smaller outages are less likely to have customer counts recorded. To make this MAR, we would need additional data on reporting thresholds used by each utility, which would explain why some outages have missing customer counts regardless of outage size.
+
+### Missingness Dependency
+
+We analyzed whether the missingness of `CUSTOMERS.AFFECTED` depends on other columns using permutation tests with a test statistic of max minus min missingness rate across groups.
+
+**Depends on: `CAUSE.CATEGORY` (p = 0.0)**
+The observed difference in missingness rates across cause categories was 0.806, far outside the range of what would occur by chance. Intentional attacks have very high rates of missing customer counts, while fuel supply emergencies almost always have them recorded. This suggests utilities report customer impact differently depending on the type of event.
+
+**Does not depend on: `ANOMALY.LEVEL` (p = 0.514)**
+The observed difference in missingness rates across anomaly levels was 0.538, well within the range expected by chance. Climate conditions do not appear to influence whether customer counts get recorded.
+
+<iframe
+  src="figures/missingness/cause_missingness_dist.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
