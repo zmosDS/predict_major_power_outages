@@ -214,3 +214,40 @@ The final model meaningfully improved across all metrics. The most significant g
   height="500"
   frameborder="0"
 ></iframe>
+
+---
+
+## Fairness Analysis
+
+I evaluated whether the final model performs equally well for outages in high-density urban states versus lower-density suburban and rural states. If the model systematically underperforms for less-populated areas, utilities in those regions may receive less reliable early warning about severe outages despite often having fewer resources to respond.
+
+**Group X (Low Density):** States with `POPDEN_URBAN` < 1,600 persons per square mile (suburban and rural). Following the U.S. Census Bureau's finding that the average population density inside U.S. cities is approximately 1,600 people per square mile, this threshold separates clearly urban states from the rest.
+
+**Group Y (High Density):** States with `POPDEN_URBAN` >= 1,600 persons per square mile (urban).
+
+**Evaluation Metric:** F1 score on the Severe class, the class that matters most for utility response planning.
+
+**Null Hypothesis:** The model is fair. Its F1 score for low density and high density states are roughly the same, and any differences are due to random chance.
+
+**Alternative Hypothesis:** The model is unfair. Its F1 score is lower for low density states than for high density states.
+
+**Test Statistic:** Difference in F1 score (high density minus low density).
+
+**Significance Level:** 0.05
+
+| Metric | Value |
+|---|---|
+| F1 Score (High Density) | 0.7191 |
+| F1 Score (Low Density) | 0.8571 |
+| Observed Difference | -0.1380 |
+| P-value | 0.836 |
+| Significance Level | 0.05 |
+
+**Conclusion:** I fail to reject the null hypothesis (p = 0.836). The observed difference of -0.138 in F1 score between high and low density states is not statistically significant, as differences of this magnitude occur frequently by random chance alone. There is not sufficient evidence to conclude that the final model performs unfairly across urban density groups. Interestingly, the model actually performs slightly better for low density states (F1 = 0.857) than high density states (F1 = 0.719), though this difference is not meaningful given the small test set size.
+
+<iframe
+  src="figures/fairness/fairness_permutation_dist.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
