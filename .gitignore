@@ -1,0 +1,8 @@
+_site
+.jekyll-cache
+.jekyll-metadata
+*.pyc
+__pycache__
+.ipynb_checkpoints
+.DS_Store
+private/
