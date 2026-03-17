@@ -118,3 +118,26 @@ The observed difference in missingness rates across anomaly levels was 0.538, we
   height="500"
   frameborder="0"
 ></iframe>
+
+---
+
+## Hypothesis Testing
+
+**Null Hypothesis:** The mean outage duration during abnormal climate conditions (warm or cold) is equal to the mean outage duration during normal conditions.
+
+**Alternative Hypothesis:** The mean outage duration during abnormal climate conditions is greater than the mean outage duration during normal conditions.
+
+**Test Statistic:** Difference in mean outage duration (in hours) between abnormal and normal climate conditions. This is a good choice because we have a clear directional hypothesis and the difference in means directly measures what we care about.
+
+**Significance Level:** 0.05
+
+**Results:** The observed difference was 3.49 hours. After running 5,000 permutations, the p-value was 0.267.
+
+**Conclusion:** We fail to reject the null hypothesis. Although outages during abnormal climate conditions lasted approximately 3.49 hours longer on average, this difference is not statistically significant and could reasonably have occurred due to random variation. We do not find sufficient evidence to conclude that abnormal climate conditions lead to longer outage durations.
+
+<iframe
+  src="figures/hypothesis/climate_permutation_dist.html"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>
