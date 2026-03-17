@@ -141,3 +141,20 @@ The observed difference in missingness rates across anomaly levels was 0.538, we
   height="500"
   frameborder="0"
 ></iframe>
+
+---
+
+## The Prediction Problem
+
+**Prediction Problem:** Can we predict, using only information available at the time an outage begins, whether the outage will become severe (defined as lasting 12 or more hours)?
+
+**Type:** Binary classification. The two classes are Severe (outage lasting 12 or more hours) and Not Severe.
+
+**Response Variable:** `SEVERE_OUTAGE`, derived from `OUTAGE.DURATION`. We chose this over predicting exact duration because utilities care most about identifying outages that will become major events, not the precise number of minutes. A binary flag is more actionable for resource allocation decisions.
+
+**Time of Prediction:** We only use features available at the moment an outage is reported, including cause category, climate conditions, geographic information, time of onset, and state-level economic and population data. We explicitly exclude restoration time, total duration, customers affected, and demand loss since these are only known after the outage has already progressed.
+
+**Evaluation Metric:** We use F1-score and PR AUC (Average Precision). Accuracy is a poor choice here because even a naive model that always predicts Not Severe could appear reasonable. F1-score balances precision and recall, and PR AUC captures model performance across all classification thresholds, both of which are more meaningful when the cost of missing a severe outage is high.
+
+---
+
