@@ -240,10 +240,10 @@ I evaluated whether the final model performs equally well for outages in high-de
 | F1 Score (High Density) | 0.7191 |
 | F1 Score (Low Density) | 0.8571 |
 | Observed Difference | -0.1380 |
-| P-value | 0.836 |
+| P-value | 0.849 |
 | Significance Level | 0.05 |
 
-**Conclusion:** I fail to reject the null hypothesis (p = 0.836). The observed difference of -0.138 in F1 score between high and low density states is not statistically significant, as differences of this magnitude occur frequently by random chance alone. There is not sufficient evidence to conclude that the final model performs unfairly across urban density groups. Interestingly, the model actually performs slightly better for low density states (F1 = 0.857) than high density states (F1 = 0.719), though this difference is not meaningful given the small test set size.
+**Conclusion:** I fail to reject the null hypothesis (p = 0.849). The observed difference of -0.138 in F1 score between high and low density states is not statistically significant, as differences of this magnitude occur frequently by random chance alone. There is not sufficient evidence to conclude that the final model performs unfairly across urban density groups. Interestingly, the model actually performs slightly better for low density states (F1 = 0.857) than high density states (F1 = 0.719), though this difference is not meaningful given the small test set size.
 
 <iframe
   src="figures/fairness/fairness_permutation_dist.html"
