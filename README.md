@@ -158,3 +158,13 @@ The observed difference in missingness rates across anomaly levels was 0.538, we
 
 ---
 
+## Baseline Model
+
+The baseline model is a logistic regression classifier trained on 17 features available at outage onset. Of these, 10 are quantitative (year, month, anomaly level, and state-level economic and population indicators), none are ordinal, and 7 are nominal (cause category, climate category, state, and grid region). Nominal features were one-hot encoded, missing numeric values were median-imputed, and missing categorical values were filled with the most frequent value, all within a single sklearn Pipeline.
+
+**Performance:** Trained on outages before 2015 and tested on 2015 onward, the model achieved 70.4% accuracy, an F1-score of 0.536 on the severe class, and a PR AUC of 0.60.
+
+**Assessment:** While 70% accuracy sounds reasonable, the F1 of 0.54 on the severe class shows the model struggles to reliably identify outages that will become major events. This is not yet a good model for real utility decision-making, but it establishes the benchmark for the final model to improve upon.
+
+---
+
