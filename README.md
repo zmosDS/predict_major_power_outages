@@ -85,12 +85,12 @@ Fuel supply emergencies and severe weather stand out as the causes most associat
 
 ### Interesting Aggregates
 
-This chart groups outages by both cause category and climate condition to show how average duration varies across combinations of the two. Fuel supply emergencies stand out dramatically, particularly during warm and cold climate periods, suggesting that extreme climate conditions compound the difficulty of resolving certain types of outages. Severe weather outages show a more modest but consistent increase in duration across all climate categories.
+The pivot table below shows mean outage duration (in hours) grouped by cause category and climate condition. Fuel supply emergencies stand out dramatically — lasting 290 hours during cold periods and 380 hours during warm periods — suggesting extreme climate conditions severely compound the difficulty of resolving fuel-related outages. Intentional attacks resolve quickly regardless of climate, while severe weather shows a steady increase in duration as conditions warm.
 
 <iframe
-  src="figures/aggregation/duration_by_cause_climate.html"
+  src="figures/aggregation/cause_climate_pivot.html"
   width="800"
-  height="500"
+  height="320"
   frameborder="0"
 ></iframe>
 
@@ -144,7 +144,7 @@ The observed difference in missingness rates across anomaly levels was 0.538, we
 
 ---
 
-## The Prediction Problem
+## Framing a Prediction Problem
 
 **Prediction Problem:** Can we predict, using only information available at the time an outage begins, whether the outage will become severe (defined as lasting 12 or more hours)?
 
@@ -160,7 +160,7 @@ The observed difference in missingness rates across anomaly levels was 0.538, we
 
 ## Baseline Model
 
-The baseline model is a logistic regression classifier trained on 17 features available at outage onset. Of these, 10 are quantitative (year, month, anomaly level, and state-level economic and population indicators), none are ordinal, and 7 are nominal (cause category, climate category, state, and grid region). Nominal features were one-hot encoded, missing numeric values were median-imputed, and missing categorical values were filled with the most frequent value, all within a single sklearn Pipeline.
+The baseline model is a logistic regression classifier trained on 17 features available at outage onset. Of these, 10 are quantitative (year, month, anomaly level, and state-level economic and population indicators), 0 are ordinal, and 7 are nominal (cause category, climate category, state, and grid region). Nominal features were one-hot encoded, missing numeric values were median-imputed, and missing categorical values were filled with the most frequent value, all within a single sklearn Pipeline.
 
 **Performance:** Trained on outages before 2015 and tested on 2015 onward, the model achieved 70.4% accuracy, an F1-score of 0.536 on the severe class, and a PR AUC of 0.60.
 
@@ -174,15 +174,15 @@ The baseline model is a logistic regression classifier trained on 17 features av
 
 Five new features were engineered on top of the baseline feature set:
 
-**`IS_WEEKEND`**: derived from the outage start timestamp. Utility crews are harder to mobilize on weekends, meaning outages that begin on a Saturday or Sunday may take longer to resolve and are more likely to become severe.
+**`IS_WEEKEND`**: derived from the outage start timestamp. Utility crews operate on reduced staffing on weekends, meaning dispatch and coordination take longer. An outage beginning Saturday morning faces structurally slower response than one beginning Tuesday morning, making weekend onset a genuine predictor of severity from the data generating process.
 
-**`IS_SUMMER`**: flags outages occurring in June, July, or August. Summer represents peak demand season when the grid is under maximum stress, making prolonged outages more likely.
+**`IS_SUMMER`**: flags outages occurring in June, July, or August. Summer represents peak demand season when transformers and transmission lines are already operating near capacity. When failures occur under high-load conditions, cascading effects are more likely and restoration is more complex, making summer outages more prone to becoming severe.
 
-**`LOG_TOTAL_CUSTOMERS`**: log transformation of the raw customer count. Since `TOTAL.CUSTOMERS` is heavily right-skewed, the log scale better captures the relationship between state size and outage severity without letting a few very large states dominate the model.
+**`LOG_TOTAL_CUSTOMERS`**: log transformation of the raw customer count. Since `TOTAL.CUSTOMERS` is heavily right-skewed, a few very large states would otherwise dominate the model. The log scale captures the real-world relationship more accurately -- the difference between a state serving 1M vs 2M customers matters more than the difference between 10M vs 11M, and the log transformation reflects this diminishing effect.
 
-**`STATE_SEVERE_RATE`**: the historical rate of severe outages per state, computed only from training data to prevent leakage. States with a track record of severe outages likely have infrastructure or geographic characteristics that make them consistently prone to long outages, giving the model strong geographic signal beyond raw location.
+**`STATE_SEVERE_RATE`**: the historical rate of severe outages per state, computed only from training data to prevent leakage. This feature encodes structural characteristics of each state's grid -- aging infrastructure, geographic exposure to weather, utility investment levels, and regulatory environment -- that collectively determine how often outages escalate. A state with a history of severe outages is not just unlucky; it has underlying conditions that make severity more likely, and this rate captures that signal directly.
 
-**`CAUSE_CLIMATE`**: an interaction term combining cause category and climate category. A fuel supply emergency during a cold climate period may behave very differently than the same cause under normal conditions, and this feature allows the model to capture those compound effects directly.
+**`CAUSE_CLIMATE`**: an interaction term combining cause category and climate category. The data generating process for outage severity is not additive -- a fuel supply emergency during a warm El Nino period is fundamentally different from the same cause during normal conditions because demand patterns, fuel availability, and grid stress all shift together. Encoding the combination as a single feature lets the model learn these joint effects rather than treating cause and climate as independent signals.
 
 ### Modeling Algorithm and Hyperparameter Tuning
 
